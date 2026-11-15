@@ -256,7 +256,15 @@ kbd {
 .splash { background: #0f73ff; cursor: pointer; }
 .splash video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .logo { display: flex; align-items: center; gap: 4px; font: 600 16px/24px var(--sans); color: #0e121b; }
-.topbar { height: 56px; flex: none; display: flex; align-items: center; padding: 8px 16px; }
+.topbar { height: 56px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; position: relative; z-index: 5; }
+.language-picker { position: relative; }
+.language-chip { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid #e2e4ec; border-radius: 20px; background: #fff; color: #262626; font: 500 13px/normal 'Be Vietnam Pro', var(--sans); }
+.language-chip img { display: block; flex: none; }
+.language-chip .expanded { transform: rotate(180deg); }
+.language-menu { position: absolute; right: 0; top: calc(100% + 8px); width: 168px; padding: 4px; background: #fff; border: 1px solid #e2e4ec; border-radius: 16px; box-shadow: 0 8px 24px rgba(14,18,27,.12); }
+.language-menu button { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 44px; padding: 10px 12px; border-radius: 12px; font: 500 13px/20px 'Be Vietnam Pro', var(--sans); }
+.language-menu button:hover, .language-menu button:focus-visible { background: #f2f6ff; }
+.language-menu button[aria-checked='true'] { color: var(--blue-link); background: #eef5ff; }
 .intro-track { display: flex; width: 300%; transition: transform 0.5s var(--ease); touch-action: pan-y; }
 .intro-track.dragging { transition: none; }
 .slide { width: 402px; flex: none; }

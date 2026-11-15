@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useApp, type Channel } from '../state';
 import { Button, Checkbox, Chip, Header, HomeBar, Icon, OtpInput, Pic, Progress, Screen, Sheet, StatusBar, imgUrl } from '../ui';
 import splashVideo from '../assets/splash.mp4';
+import { LanguagePicker } from '../LanguagePicker';
 
 export const Logo = ({ scale = 1 }: { scale?: number }) => (
   <span className="logo" style={scale !== 1 ? { fontSize: 16 * scale, lineHeight: `${24 * scale}px`, gap: 4 * scale } : undefined}>
@@ -53,7 +54,7 @@ export function Intro() {
   const scaleOf = (el: HTMLElement) => el.getBoundingClientRect().width / el.offsetWidth || 1;
   return (
     <Screen
-      top={<><StatusBar /><div className="topbar"><Logo /></div></>}
+      top={<><StatusBar /><div className="topbar"><Logo /><LanguagePicker /></div></>}
       bottom={
         <div className="footer">
           <div style={{ padding: '12px 16px' }}><Button onClick={() => go('phone')}>Sign up</Button></div>
