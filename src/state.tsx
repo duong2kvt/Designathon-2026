@@ -8,7 +8,7 @@ export type ScreenId =
 export type Transition = 'push' | 'back' | 'fade' | 'none';
 export type Channel = 'whatsapp' | 'sms' | 'call';
 
-export type Flow = { id: 1 | 2 | 3; title: string; caption: string; steps: { screen: ScreenId; label: string }[] };
+export type Flow = { id: 1 | 2 | 3 | 4; title: string; caption: string; steps: { screen: ScreenId; label: string }[] };
 
 export const FLOWS: Flow[] = [
   {
@@ -44,9 +44,14 @@ export const FLOWS: Flow[] = [
       { screen: 'sent', label: 'Request sent' },
     ],
   },
+  { id: 4, title: 'Skip for now', caption: 'Explore before scanning your card', steps: [
+    { screen: 'docs', label: 'Add documents' },
+    { screen: 'home', label: 'Home · no documents' },
+  ] },
 ];
 
 export type AppData = {
+  documentsAdded: boolean;
   phone: string;
   channel: Channel;
   employed: boolean;        // true once the job offer is signed (Home shows the working variant)
@@ -57,11 +62,11 @@ export type AppData = {
 };
 
 const initialData: AppData = {
-  phone: '151 2345 6789', channel: 'whatsapp', employed: false, paymentAdded: false,
+  documentsAdded: false, phone: '151 2345 6789', channel: 'whatsapp', employed: false, paymentAdded: false,
   openToLongTerm: true, question: null, bookingCancelled: false,
 };
 
-type Nav = { screen: ScreenId; prev: ScreenId | null; transition: Transition; key: number; flow: 1 | 2 | 3 };
+type Nav = { screen: ScreenId; prev: ScreenId | null; transition: Transition; key: number; flow: 1 | 2 | 3 | 4 };
 
 type Ctx = {
   nav: Nav;
@@ -69,8 +74,8 @@ type Ctx = {
   go: (screen: ScreenId, transition?: Transition) => void;
   back: (fallback: ScreenId) => void;
   set: (patch: Partial<AppData>) => void;
-  startFlow: (flow: 1 | 2 | 3) => void;
-  jump: (flow: 1 | 2 | 3, screen: ScreenId) => void;
+  startFlow: (flow: 1 | 2 | 3 | 4) => void;
+  jump: (flow: 1 | 2 | 3 | 4, screen: ScreenId) => void;
   step: (delta: 1 | -1) => void;
   toast: (message: string) => void;
   toastMessage: string | null;
@@ -84,8 +89,9 @@ export const useApp = () => {
   return c;
 };
 
-const flowOf = (screen: ScreenId, employed: boolean, current: 1 | 2 | 3): 1 | 2 | 3 => {
-  if (screen === 'home') return employed ? 2 : current === 3 ? 3 : 1;
+const flowOf = (screen: ScreenId, employed: boolean, current: 1 | 2 | 3 | 4): 1 | 2 | 3 | 4 => {
+  if (screen === 'home') return employed ? 2 : current === 3 ? 3 : current === 4 ? 4 : 1;
+  if (screen === 'docs' && current === 4) return 4;
   const hit = FLOWS.find((f) => f.steps.some((s) => s.screen === screen));
   return hit ? hit.id : current;
 };
@@ -109,20 +115,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const set = useCallback((patch: Partial<AppData>) => setData((d) => ({ ...d, ...patch })), []);
   const clearPrev = useCallback(() => setNav((n) => (n.prev ? { ...n, prev: null } : n)), []);
 
-  const jump = useCallback((flow: 1 | 2 | 3, screen: ScreenId) => {
+  const jump = useCallback((flow: 1 | 2 | 3 | 4, screen: ScreenId) => {
     // Put the app in the state that screen expects, so any step can be opened directly during a demo.
     const order = FLOWS[flow - 1].steps.map((s) => s.screen);
     const idx = order.indexOf(screen);
     setData((d) => {
-      if (flow === 1) return { ...initialData, phone: d.phone, channel: d.channel };
-      if (flow === 2) return { ...d, employed: idx >= 2, paymentAdded: idx >= 4, question: null };
+      if (flow === 4) return { ...initialData, phone: d.phone, channel: d.channel };
+      if (flow === 1) return { ...initialData, documentsAdded: screen === 'home', phone: d.phone, channel: d.channel };
+      if (flow === 2) return { ...d, documentsAdded: true, employed: idx >= 2, paymentAdded: idx >= 4, question: null };
       return { ...d, question: idx >= 1 ? d.question ?? QUESTIONS[0].title : null, bookingCancelled: false };
     });
     dataRef.current = { ...dataRef.current, employed: flow === 2 && idx >= 2 };
     setNav((n) => ({ screen, prev: n.screen, transition: 'fade', key: n.key + 1, flow }));
   }, []);
 
-  const startFlow = useCallback((flow: 1 | 2 | 3) => jump(flow, FLOWS[flow - 1].steps[0].screen), [jump]);
+  const startFlow = useCallback((flow: 1 | 2 | 3 | 4) => jump(flow, FLOWS[flow - 1].steps[0].screen), [jump]);
 
   const step = useCallback((delta: 1 | -1) => {
     setNav((n) => {

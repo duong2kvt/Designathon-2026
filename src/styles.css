@@ -441,3 +441,27 @@ kbd {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; transition-duration: 0.01ms !important; }
 }
+/* Home before document verification */
+.no-documents .home { gap: 12px; }
+.no-documents .greeting { position: relative; align-items: flex-start; }
+.no-documents .greeting > div:first-child { display: flex; flex-direction: column; gap: 2px; }
+.no-documents .greeting .language-picker { position: absolute; top: 0; right: 0; z-index: 6; }
+.language-picker.compact .language-chip { padding: 6.875px 11px; border-color: #cfcfcf; border-width: .688px; font: 500 10.313px/normal var(--sans); gap: 3px; }
+.language-picker.compact .language-chip > img:first-child { display: none; }
+.language-picker.compact .language-chip > img:last-child { width: 8px; height: 8px; }
+.unlock-card { position: relative; display: flex; flex-direction: column; gap: 10px; flex: none; padding: 16px; border-radius: 16px; overflow: hidden; background: var(--blue); color: #fff; }
+.unlock-deco { position: absolute; left: 95px; top: 0; width: 383px; height: 325.2px; mix-blend-mode: lighten; pointer-events: none; }
+.unlock-card > :not(.unlock-deco) { position: relative; }
+.unlock-card h3 { font: 600 17px/21px var(--sans); }
+.unlock-progress { display: flex; gap: 6px; }
+.unlock-progress i { height: 6px; flex: 1; border-radius: 3px; background: #fff; }
+.unlock-progress i:last-child { background: #e2e2e2; opacity: .57; }
+.unlock-steps { font: 400 13px/16px var(--sans); }
+.unlock-label { font: 500 14px/17px var(--sans); }
+.unlock-benefit { display: flex; align-items: flex-start; gap: 10px; font: 400 14px/18px var(--sans); }
+.unlock-benefit img { flex: none; }
+.unlock-button { height: 52px; background: #fff; color: #000; text-align: center; border-radius: 12px; font: 600 16px/20px var(--sans); border-bottom: 1px solid var(--line); }
+.no-documents .listhead h3 { flex: 1; font: 600 17px/21px var(--sans); }
+.no-documents .listhead button { display: flex; gap: 8px; align-items: center; font: 500 14px/17px var(--sans); color: var(--muted); }
+.documents-needed { display: flex; align-items: center; gap: 6px; border-radius: 999px; background: #fff4d6; color: #8a6400; padding: 5px 10px; font: 500 12px/15px var(--sans); }
+.no-documents .bottomnav .homebar i { background: rgba(2,2,2,.07); }

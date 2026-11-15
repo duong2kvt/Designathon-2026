@@ -50,3 +50,7 @@ src/
 - Dữ liệu và "AI" là mô phỏng, chưa có backend. Mã xác thực tự điền sau khoảng 1 giây (giả lập mã về từ WhatsApp), vẫn gõ tay được.
 - Icon và ảnh được render từ Figma ở độ phân giải cao (icon 8x, ảnh 2–6x) vì phiên làm việc không tải được file export trực tiếp. Nếu có file export gốc (SVG), thay vào `src/assets/` và giữ nguyên tên.
 - Hình nền màn hình khoá được lấy từ frame Figma rồi xoá chữ và thẻ thông báo để dựng lại bằng code.
+
+## Demo 4: Skip for now
+
+Choose **4 · Skip for now** (or press `4`) to start at Add documents. Tap **Skip for now** to explore Home without a scanned residence permit. Home shows the remaining onboarding step and Documents needed labels. **Add documents** and **Accept** return to the document screen; scanning and confirming unlock the regular Home. The existing sign-up, first-job and Q&A demos remain available.

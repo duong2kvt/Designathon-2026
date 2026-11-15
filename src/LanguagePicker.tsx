@@ -8,7 +8,7 @@ const languages = [
   { code: 'de', label: 'German' },
 ];
 
-export function LanguagePicker() {
+export function LanguagePicker({ compact = false }: { compact?: boolean }) {
   const [selected, setSelected] = useState(() => {
     try { return languages.find((language) => language.code === localStorage.getItem('viecnhanh-language')) ?? languages[0]; }
     catch { return languages[0]; }
@@ -29,7 +29,7 @@ export function LanguagePicker() {
   }, [open, selected]);
 
   return (
-    <div className="language-picker" ref={root}
+    <div className={`language-picker${compact ? ' compact' : ''}`} ref={root}
       onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}
       onKeyDown={(event) => {
         if (event.key === 'Escape') { event.stopPropagation(); setOpen(false); trigger.current?.focus(); }

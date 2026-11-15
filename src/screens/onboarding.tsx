@@ -257,7 +257,7 @@ const TRUST = [
 ];
 
 export function AddDocuments() {
-  const { go, toast } = useApp();
+  const { go, toast, set } = useApp();
   const [scanning, setScanning] = useState(false);
   useEffect(() => {
     if (!scanning) return;
@@ -290,7 +290,7 @@ export function AddDocuments() {
         <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 12, marginTop: 16 }}>
           <Button onClick={() => setScanning(true)}>Hold card to phone</Button>
           <Button variant="secondary" onClick={() => toast('Camera capture is not part of this demo')}>Photograph documents</Button>
-          <Button variant="text" onClick={() => go('home')}>Skip for now</Button>
+          <Button variant="text" onClick={() => { set({ documentsAdded: false, employed: false }); go('home'); }}>Skip for now</Button>
         </div>
         <HomeBar />
       </div>
@@ -322,7 +322,7 @@ const DETAILS = [
 ];
 
 export function CheckDetails() {
-  const { go, back, toast } = useApp();
+  const { go, back, toast, set } = useApp();
   return (
     <div className="screen">
       <StatusBar />
@@ -348,7 +348,7 @@ export function CheckDetails() {
           </div>
         </div>
         <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 12, marginTop: 'auto' }}>
-          <Button onClick={() => go('home')}>Confirm</Button>
+          <Button onClick={() => { set({ documentsAdded: true }); go('home'); }}>Confirm</Button>
           <Button variant="secondary" onClick={() => back('docs')}>Scan again</Button>
         </div>
         <HomeBar />

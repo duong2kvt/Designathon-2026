@@ -67,7 +67,7 @@ function usePanels({ clean, onClean }: { clean: boolean; onClean: () => void }) 
       <aside className="panel left" aria-hidden={clean}>
         <div className="brand"><Icon name="logo-mark" color="#4f9bff" />Việc Nhanh</div>
         <h2>Work in Germany, made simple.</h2>
-        <p className="lede">Interactive build of the three demo flows. Pick a flow, then use the phone like the real app.</p>
+        <p className="lede">Interactive build of the four demo flows. Pick a flow, then use the phone like the real app.</p>
         <div className="flows">
           {FLOWS.map((f) => (
             <button key={f.id} className={`flow ${f.id === nav.flow ? 'on' : ''}`} onClick={() => startFlow(f.id)}>
@@ -94,7 +94,7 @@ function usePanels({ clean, onClean }: { clean: boolean; onClean: () => void }) 
         </div>
         <div className="eyebrow">Keyboard</div>
         <div className="keys">
-          <span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> switch flow</span>
+          <span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> switch flow</span>
           <span><kbd>←</kbd><kbd>→</kbd> previous / next screen</span>
           <span><kbd>R</kbd> restart flow</span>
           <span><kbd>H</kbd> hide panels · <kbd>F</kbd> full screen</span>
@@ -124,7 +124,7 @@ function Stage() {
       if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const k = e.key.toLowerCase();
-      if (k === '1' || k === '2' || k === '3') startFlow(Number(k) as 1 | 2 | 3);
+      if (k === '1' || k === '2' || k === '3' || k === '4') startFlow(Number(k) as 1 | 2 | 3 | 4);
       else if (k === 'arrowright') step(1);
       else if (k === 'arrowleft') step(-1);
       else if (k === 'r') startFlow(flowRef.current);

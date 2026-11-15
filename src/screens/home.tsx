@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { useApp } from '../state';
 import { BottomNav, Icon, StatusBar, imgUrl } from '../ui';
+import { LanguagePicker } from '../LanguagePicker';
+import unlockDeco from '../assets/img/unlock-deco.svg';
+import documentsLock from '../assets/icons/documents-lock.svg';
+import unlockCheck from '../assets/icons/unlock-check.svg';
 
 const JOBS = [
   { id: 'fair', title: 'Trade fair clean-up', rate: '€15.00/hr', when: 'Today, 14:00–20:00 · 3 km away' },
   { id: 'load', title: 'Loading and unloading', rate: '€15.50/hr', when: 'Tomorrow, 7:00–13:00 · 6 km away' },
 ];
 
-function JobCard({ job, wide }: { job: (typeof JOBS)[number]; wide?: boolean }) {
-  const { toast } = useApp();
+function JobCard({ job, wide, locked = false }: { job: (typeof JOBS)[number]; wide?: boolean; locked?: boolean }) {
+  const { toast, go } = useApp();
   const [accepted, setAccepted] = useState(false);
   return (
     <article className={`jobcard ${wide ? 'wide' : ''}`}>
@@ -17,10 +21,11 @@ function JobCard({ job, wide }: { job: (typeof JOBS)[number]; wide?: boolean }) 
         <div className="when"><Icon name="clock" size={18} color="#6b6f7a" />{job.when}</div>
         <hr />
         <div className="act">
-          <span className="paidtag"><Icon name="bolt" size={12} color="#b07f00" />Paid same day</span>
+          {locked ? <span className="documents-needed"><img src={documentsLock} width="14" height="14" alt="" />Documents needed</span>
+            : <span className="paidtag"><Icon name="bolt" size={12} color="#b07f00" />Paid same day</span>}
           <button
             className={`accept ${accepted ? 'done' : ''}`}
-            onClick={() => { setAccepted((a) => !a); if (!accepted) toast(`${job.title} accepted`); }}
+            onClick={() => { if (locked) { toast('Add your documents before accepting a job'); go('docs'); return; } setAccepted((a) => !a); if (!accepted) toast(`${job.title} accepted`); }}
           >
             {accepted ? 'Accepted' : 'Accept'}
           </button>
@@ -34,6 +39,7 @@ function JobCard({ job, wide }: { job: (typeof JOBS)[number]; wide?: boolean }) 
 export function Home() {
   const { data, set, go, toast } = useApp();
   const working = data.employed;
+  if (!working && !data.documentsAdded) return <HomeWithoutDocuments />;
   return (
     <div className="screen">
       <StatusBar />
@@ -101,6 +107,39 @@ export function Home() {
           </div>
           {working && <p style={{ font: '400 13px/16px var(--sans)' }} className="muted">Only shows jobs that don't clash with your shifts or exceed your legal hours.</p>}
           {JOBS.map((j) => <JobCard key={j.id} job={j} wide={working} />)}
+        </div>
+      </div>
+      <BottomNav active="home" />
+    </div>
+  );
+}
+
+function HomeWithoutDocuments() {
+  const { go, toast } = useApp();
+  return (
+    <div className="screen no-documents">
+      <StatusBar />
+      <div className="body">
+        <div className="home">
+          <div className="greeting">
+            <div><h2 className="anton">Hi An</h2><p className="t14 muted">No documents added yet</p></div>
+            <LanguagePicker compact />
+          </div>
+          <section className="unlock-card">
+            <img className="unlock-deco" src={unlockDeco} alt="" />
+            <h3>One step left to get jobs</h3>
+            <div className="unlock-progress" aria-label="2 of 3 steps complete"><i /><i /><i /></div>
+            <p className="unlock-steps">Phone ✓&nbsp;&nbsp; Preferences ✓&nbsp;&nbsp; Documents</p>
+            <p className="unlock-label">Add documents to:</p>
+            <p className="unlock-benefit"><img src={unlockCheck} width="18" height="18" alt="" />Take day jobs and get paid the same day</p>
+            <p className="unlock-benefit"><img src={unlockCheck} width="18" height="18" alt="" />Get picked by Businesses for long-term jobs</p>
+            <button className="unlock-button" onClick={() => go('docs')}>Add documents</button>
+          </section>
+          <div className="listhead">
+            <h3>Day jobs near you</h3>
+            <button onClick={() => toast('All day jobs are shown')}>See all<Icon name="flip-forward" size={20} color="#6b6b6b" /></button>
+          </div>
+          {JOBS.map((job) => <JobCard key={job.id} job={job} locked />)}
         </div>
       </div>
       <BottomNav active="home" />
